@@ -43,10 +43,9 @@ gh repo create babystages --public --source=. --push
 #   git remote add origin https://github.com/<user>/babystages.git
 #   git push -u origin main
 ```
-> The workflow lives at `babystages/.github/workflows/deploy-pages.yml`. If you
-> push `babystages/` as the repo root (as above), it's at `.github/...` ✓. If you
-> instead push the whole `Claude/` parent folder, move the workflow to the repo's
-> top-level `.github/workflows/` (Actions only runs workflows from the repo root).
+> The workflow lives at `.github/workflows/deploy-pages.yml` and builds `./client`
+> — this assumes `babystages/` is the repo root (as pushed above). Actions only
+> runs workflows from the repo's top-level `.github/workflows/`.
 
 ## Part C — Configure Pages + variables
 1. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
