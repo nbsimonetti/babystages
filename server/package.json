@@ -13,7 +13,7 @@
     "prisma:deploy": "prisma migrate deploy",
     "prisma:push": "prisma db push --skip-generate",
     "prisma:studio": "prisma studio",
-    "render-build": "npm install && prisma generate && prisma db push --skip-generate"
+    "postinstall": "node scripts/postinstall.mjs"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
