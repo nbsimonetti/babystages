@@ -1,0 +1,17 @@
+{
+  "name": "babystages",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Child development & parenting companion — milestones and guidance from trusted sources, with user accounts and multi-child support.",
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "dev": "concurrently -n server,client -c magenta,cyan \"npm run dev:server\" \"npm run dev:client\"",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}

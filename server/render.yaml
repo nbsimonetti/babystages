@@ -1,0 +1,33 @@
+# Render.com blueprint for the BabyStages API + Postgres.
+# In the Render dashboard: New > Blueprint, point at this repo (root: babystages/server).
+services:
+  - type: web
+    name: babystages-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /api/health
+    # Run migrations on each deploy.
+    preDeployCommand: npm run prisma:deploy
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "4000"
+      - key: USE_PRISMA
+        value: "1"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: babystages-db
+          property: connectionString
+      - key: EMAIL_PROVIDER
+        sync: false
+      - key: REVENUECAT_WEBHOOK_SECRET
+        sync: false
+
+databases:
+  - name: babystages-db
+    plan: free

@@ -1,0 +1,70 @@
+name: Deploy frontend to GitHub Pages
+
+# Builds the static client and publishes it to GitHub Pages. The backend is NOT
+# deployed here — host it separately (Render/Fly, see docs/DEPLOY.md) and put its
+# public URL in the VITE_API_BASE repo variable so the static frontend can reach
+# it cross-origin. See docs/SPLIT_DEPLOY.md.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'babystages/client/**'
+      - 'babystages/.github/workflows/deploy-pages.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; let in-progress runs finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: babystages/client
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: babystages/client/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        env:
+          # Repo-name subpath for a project Pages site, e.g. "/babystages/".
+          # Override via the VITE_BASE repo variable (use "/" for a user/org or
+          # custom-domain site).
+          VITE_BASE: ${{ vars.VITE_BASE || '/babystages/' }}
+          # Public URL of the hosted API, e.g. https://babystages-api.onrender.com/api
+          # Set this as a repo variable (Settings → Secrets and variables →
+          # Actions → Variables). Without it, login/sync won't work.
+          VITE_API_BASE: ${{ vars.VITE_API_BASE }}
+        run: npm run build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: babystages/client/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,26 @@
+# Fly.io deployment for the BabyStages API.
+# Set secrets first:
+#   fly secrets set JWT_SECRET=... USE_PRISMA=1 DATABASE_URL=... EMAIL_PROVIDER=... REVENUECAT_WEBHOOK_SECRET=...
+# Provision Postgres:  fly postgres create  &&  fly postgres attach <db>
+# Deploy:              fly deploy
+# Run migrations:      fly ssh console -C "npm run prisma:deploy"
+app = "babystages-api"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "4000"
+  NODE_ENV = "production"
+
+[http_service]
+  internal_port = 4000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

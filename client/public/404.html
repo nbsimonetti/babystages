@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BabyStages</title>
+    <script>
+      // GitHub Pages SPA fallback: Pages serves this file for any unknown path
+      // (e.g. a deep link or a hard refresh on /babystages/account). We stash the
+      // requested path in sessionStorage and bounce to index.html, where a small
+      // script in index.html restores it so React Router can handle the route.
+      sessionStorage.setItem('spa-redirect', location.pathname + location.search + location.hash);
+      // Redirect to the app root (this file always lives at the Pages base).
+      var base = location.pathname.replace(/\/[^/]*$/, '/');
+      location.replace(base);
+    </script>
+  </head>
+  <body></body>
+</html>
